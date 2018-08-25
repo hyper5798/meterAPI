@@ -24,8 +24,8 @@ config.generalKey = 'gemtek';
 //None Auth
 // config.mongoDB = 'mongodb://localhost/nidumeter';
 //Auth
-config.mongoDB = 'mongodb://gemtek:gemtek12345@localhost/nidumeter?authSource=admin';
-// config.mongoDB = 'mongodb://localhost/agri';
+// config.mongoDB = 'mongodb://gemtek:gemtek12345@localhost/nidumeter?authSource=admin';
+config.mongoDB = 'mongodb://localhost/nidumeter';
 //Pagination
 config.paginate = false;
 config.page_limit = 5000;

@@ -372,8 +372,9 @@ module.exports = (function() {
 		if (req.body.createUser) { 
 			actInfo.createUser = req.body.createUser;
 		}
-		if (req.body.userName) {
-			actInfo.userName = req.body.userName;
+		
+		if (req.body.pic) {
+			actInfo.pic = req.body.pic;
 		}
 		//Jason add for log revord 2018.04.20  -- end
 		// Jason add for fix roleId be changed by login user token roleId
@@ -396,8 +397,14 @@ module.exports = (function() {
 						} else {
 							// OAFlg = false
 							if(actInfo.dataset === 0 || actInfo.dataset === 1) {
-								//All user query		
-								sqlStr = 'UPDATE api_user SET `cpId` = '+actInfo.catId+', `roleId` = '+actInfo.mRoleId+', `userBlock` = '+actInfo.userBlock+', `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId+' WHERE `userId` = '+actInfo.mUserId +' and cpId = '+actInfo.cpId;
+								//All user query	
+								// Modify for update pic on 2018.08.25
+								// sqlStr = 'UPDATE api_user SET `cpId` = '+actInfo.catId+', `roleId` = '+actInfo.mRoleId+', `userBlock` = '+actInfo.userBlock+', `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId+' WHERE `userId` = '+actInfo.mUserId +' and cpId = '+actInfo.cpId;
+								sqlStr = 'UPDATE api_user SET `cpId` = '+actInfo.catId+', `roleId` = '+actInfo.mRoleId+', `userBlock` = '+actInfo.userBlock+', `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId;
+								if(actInfo.pic) {
+									sqlStr = sqlStr + '", `pic` = '+actInfo.userId;
+								}
+								sqlStr = sqlStr +' WHERE `userId` = '+actInfo.mUserId +' and cpId = '+actInfo.cpId;
 								console.log('put /users sqlStr :\n' + sqlStr);
 								mysqlTool.update(sqlStr, function(err, result){
 									if (err) {
@@ -475,7 +482,13 @@ module.exports = (function() {
 			},
 			function(rst3, next){
 				//Update User for oa
-				let sqlStr = 'UPDATE api_user SET `roleId` = '+actInfo.mRoleId+', `userBlock` = '+actInfo.userBlock+', `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId+' WHERE `userId` = '+actInfo.mUserId;
+				// Modify for update pic on 2018.08.25
+				// let sqlStr = 'UPDATE api_user SET `roleId` = '+actInfo.mRoleId+', `userBlock` = '+actInfo.userBlock+', `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId+' WHERE `userId` = '+actInfo.mUserId;
+				let sqlStr = 'UPDATE api_user SET `roleId` = '+actInfo.mRoleId+', `userBlock` = '+actInfo.userBlock+', `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId;
+				if(actInfo.pic) {
+					sqlStr = sqlStr + ', `pic` = "'+actInfo.pic+ '"';
+				}
+				sqlStr = sqlStr +' WHERE `userId` = '+actInfo.mUserId; 
 				console.log('updateuser sqlstr :\n' + sqlStr);
 				mysqlTool.update(sqlStr, function(err4, result4){
 					next(err4, result4);

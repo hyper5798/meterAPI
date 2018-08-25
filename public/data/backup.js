@@ -11,10 +11,10 @@ config.baseurl = '/v1/';
 //Myaql Database
 config.database = 'cloudb';
 config.dbHost = 'localhost';
+// config.username = 'root';
+// config.password = '12345678';
 config.username = 'root';
-config.password = '12345678';
-// config.username = 'admin';
-// config.password = 'gemtek12345';
+config.password = 'gemtek12345';
 config.table_prefix = 'api_';
 config.dbPort = 3306;
 //Key
@@ -44,11 +44,6 @@ config.mqttPort = 1883;
 config.mytopic = 'GIOT-GW/UL/+';
 config.mqttName = 'gemtek';
 config.mqttPassword = 'gemtek12345';
-/*config.mqttHost = '52.193.146.103';
-config.mqttPort = 80;
-config.mytopic = 'client/200000107/200000107-GIOT-MAKER';
-config.mqttName = '200000107';
-config.mqttPassword = '09255143';*/
 config.client_Id = '200000107-generic-service-02';
 //line-bot
 config.channelId = '';

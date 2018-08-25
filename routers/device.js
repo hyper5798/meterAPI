@@ -495,6 +495,8 @@ module.exports = (function() {
 					"responseMsg" : err
 				});
 			} else {
+				var json = {type:'device', subject:'新增裝置', content: '裝置:' + actInfo.mac, userId: actInfo.userId, cpId: actInfo.cpId.toString()};
+				util.addLog(json);
 				res.send({
 					"responseCode" : '000',
 					"responseMsg" : 'insert success'
@@ -591,6 +593,7 @@ module.exports = (function() {
 	//Update devices
 	router.put('/device', function(req, res) {
 		//Check params
+		//d,token,name,status
 		var mac = req.body.d;
 		var token = req.body.token;
 		var name = req.body.name;
@@ -603,9 +606,13 @@ module.exports = (function() {
 			});
 			return;
 		} 
+		
 		actInfo.name = name;
 		actInfo.mac = mac;
 		actInfo.token = req.body.token;
+		if (req.body.status != undefined) {
+			actInfo.status = req.body.status;
+		}
 		// Jason add for temp test
 
 		async.waterfall([
@@ -626,7 +633,11 @@ module.exports = (function() {
 							});
 							return;
 						}
-						var sqlStr = 'UPDATE api_device_info SET `device_name` = "'+actInfo.name+'", `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId+' WHERE `device_mac` = "'+actInfo.mac+'"';
+						var sqlStr = 'UPDATE api_device_info SET `device_name` = "'+actInfo.name+'", `updateTime` = "' + util.getCurrentTime() +'", `updateUser` = '+actInfo.userId;
+						if (actInfo.status != undefined) {
+							sqlStr = sqlStr +', `device_status` = '+actInfo.status;
+						}
+						sqlStr = sqlStr +' WHERE `device_mac` = "'+actInfo.mac+'"';
 						console.log('/device post sqlStr :\n' + sqlStr);
 						next(err1, sqlStr);
 					}
@@ -658,6 +669,13 @@ module.exports = (function() {
 			} else {
 				var contentStr = '裝置:' + actInfo.mac + ' 名稱:'+ actInfo.name;
 				var json = {type:'device', subject:'更新裝置', content: contentStr, userId: actInfo.userId, cpId: actInfo.cpId.toString()};
+				var remark = actInfo.name + ',';
+				if (actInfo.status === 3) {
+					remark = remark + '啟用,'; 
+				} else if (actInfo.status === 0) {
+					remark = remark + '禁用,';
+				}  
+				json.remark = remark;
 				util.addLog(json);
 				res.send({
 					"responseCode" : '000',
@@ -685,7 +703,7 @@ module.exports = (function() {
 		}
 		if (req.query.delDeviceId) {
 			actInfo.delDeviceId = req.query.delDeviceId;
-		} else if (req.body.deviceType) {
+		} else if (req.body.delDeviceId) {
 			actInfo.delDeviceId = req.body.delDeviceId;
 		} else {
 			res.send({
@@ -698,7 +716,7 @@ module.exports = (function() {
 		//Jason add for log delete mac on 2018.04.28 -- start
 		if (req.query.mac) {
 			actInfo.mac = req.query.mac;
-		} else if (req.body.getMacString) {
+		} else if (req.body.mac) {
 			actInfo.mac = req.body.mac;
 		} else {
 			res.send({

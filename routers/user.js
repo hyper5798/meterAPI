@@ -372,6 +372,9 @@ module.exports = (function() {
 		if (req.body.createUser) { 
 			actInfo.createUser = req.body.createUser;
 		}
+		if (req.body.userName) { 
+			actInfo.userName = req.body.userName;
+		}
 		
 		if (req.body.pic) {
 			actInfo.pic = req.body.pic;
@@ -734,18 +737,19 @@ function toAddUpdateLog (actInfo) {
 	} else {
 		json.content = '帳戶Id' + actInfo.mUserId;
 	}
-	var remark = '';
-	if (actInfo.mRoleId === 1) {
-		remark = remark + '超級管理者,'; 
-	} else if (actInfo.mRoleId === 8) {
-		remark = remark + '一般管理者,';
-	} else {
-		remark = remark + '一般使用者,';
-	}
-	if (actInfo.userBlock === 0) {
-		remark = remark + '啟用'; 
-	} else if (actInfo.mRoleId === 8) {
-		remark = remark + '禁用';
+		var remark = '';
+		if (actInfo.mRoleId === 1) {
+			remark = remark + '一般管理者,'; 
+		} else if (actInfo.mRoleId === 8) {
+			remark = remark + '一般使用者,';
+		} 
+		if (actInfo.userBlock === 0) {
+			remark = remark + '啟用,'; 
+		} else if (actInfo.userBlock === 1) {
+			remark = remark + '禁用,';
+	} 
+	if (actInfo.pic) {
+		remark = remark + '分區:' +actInfo.pic; 
 	} 
 	json.remark = remark;
 	util.addLog(json);

@@ -9,7 +9,7 @@ var logSchema = new Schema({
   subject     : { type: String},
   content     : { type: String},
   createUser  : { type: String},
-  createTime  : { type: Date},
+  createTime  : { type: String},
   date        : { type: String},
   cpId        : { type: String},
   remark      : { type: String}

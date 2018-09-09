@@ -225,7 +225,7 @@ function parseMsgd(message, callback) {
                 
                 if(mInfo){
                     if(mExtra.fport == 1) {
-                        mInfo.Esum = mInfo.Ea + mInfo.Er;
+                        mInfo.Esum = ((mInfo.Ea*10) + (mInfo.Er*10))/10;
                     }
                     var msg = {macAddr: mMac, data: mData, timestamp: timestamp, recv: mRecv, date: mDate};
                     console.log('**** '+msg.date +' mac:'+msg.macAddr+' => data:'+msg.data+'\ninfo:'+JSON.stringify(mInfo));

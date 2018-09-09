@@ -513,6 +513,107 @@ module.exports = (function() {
 		});
 	});
 
+	//update password
+	
+	router.put('/users/changePwd/:id', function(req, res) {
+		//Check params
+        var actInfo = {};
+        if (req.body.pwd === undefined || req.body.pwd === null || req.body.pwd === '') {
+            res.send({
+				"responseCode" : '999',
+				"responseMsg" : 'Missing parameter'
+			});
+			return;
+		} else {
+			actInfo.pwd = req.body.pwd;
+		}
+		actInfo.mUserId = req.params.id; //change password by user id
+		actInfo.pwd= util.encode(actInfo.pwd, config.generalKey);
+		
+		//Jason add for log revord 2018.04.20  -- end
+		// Jason add for fix roleId be changed by login user token roleId
+
+        util.checkAndParseToken(req.body.token, res,function(err1, result1){
+			if (err1) {
+				res.send({
+					"responseCode" : '404',
+					"responseMsg" : err1.message
+				});
+				return;
+			} else { 
+				//Token is ok
+				actInfo = util.addJSON(actInfo, result1.userInfo);
+				console.log('actInfo : ' + JSON.stringify(actInfo))
+				let sqlStr  = 'UPDATE api_user SET `userPwd` = "'+actInfo.pwd+'", `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId;		
+				sqlStr = sqlStr +' WHERE `userId` = '+actInfo.mUserId;
+				console.log('put /users pwd sqlStr :\n' + sqlStr);
+				mysqlTool.update(sqlStr, function(err, result){
+					if (err) {
+						res.send({
+							"responseCode" : '404',
+							"responseMsg" : 'update fail'
+						});
+						return;
+					} else {
+						toAddUpdateLog (actInfo); 
+						res.send({
+							"responseCode" : '000',
+							"responseMsg" : 'updata success'
+						});
+						return;
+					}	
+				});   
+			}
+		});
+	});
+
+	router.put('/users/changePwd', function(req, res) {
+		//Check params
+		var checkArr = ["pwd"];
+        var actInfo = util.checkFormData(req, checkArr);
+        if (actInfo === null) {
+            res.send({
+				"responseCode" : '999',
+				"responseMsg" : 'Missing parameter'
+			});
+			return;
+		}
+		actInfo.pwd= util.encode(actInfo.pwd, config.generalKey);
+		
+		util.checkAndParseToken(req.body.token, res,function(err1, result1){
+			if (err1) {
+				res.send({
+					"responseCode" : '404',
+					"responseMsg" : err1.message
+				});
+				return;
+			} else { 
+				//Token is ok
+				actInfo = util.addJSON(actInfo, result1.userInfo);
+				console.log('actInfo : ' + JSON.stringify(actInfo))
+				let sqlStr  = 'UPDATE api_user SET `userPwd` = "'+actInfo.pwd+'", `updateTime` = "'+util.getCurrentTime()+'", `updateUser` = '+actInfo.userId;		
+				sqlStr = sqlStr +' WHERE `userId` = '+actInfo.userId;
+				console.log('put /users pwd sqlStr :\n' + sqlStr);
+				mysqlTool.update(sqlStr, function(err, result){
+					 if (err) {
+						res.send({
+							"responseCode" : '404',
+							"responseMsg" : 'update fail'
+						});
+						return;
+					} else {
+						toAddUpdateLog (actInfo); 
+						res.send({
+							"responseCode" : '000',
+							"responseMsg" : 'updata success'
+						});
+						return;
+					}	
+				});   
+			}
+		});
+	});
+
 	//delete user
 	router.delete('/users', function(req, res) {
 		//Check params

@@ -11,8 +11,10 @@ config.baseurl = '/v1/';
 //Myaql Database
 config.database = 'cloudb';
 config.dbHost = 'localhost';
+//For my test
 // config.username = 'root';
 // config.password = '12345678';
+// For computer center
 config.username = 'root';
 config.password = 'gemtek12345';
 config.table_prefix = 'api_';
@@ -22,10 +24,9 @@ config.tokenKey = 'gemtektoken';
 config.generalKey = 'gemtek';
 //Mongo Database
 //None Auth
-// config.mongoDB = 'mongodb://localhost/nidumeter';
-//Auth
-// config.mongoDB = 'mongodb://gemtek:gemtek12345@localhost/nidumeter?authSource=admin';
 config.mongoDB = 'mongodb://localhost/nidumeter';
+//Auth
+// config.mongoDB = 'mongodb://root:gemtek12345@localhost/nidumeter?authSource=admin';
 //Pagination
 config.paginate = false;
 config.page_limit = 5000;

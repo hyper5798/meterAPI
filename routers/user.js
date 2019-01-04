@@ -38,6 +38,14 @@ module.exports = (function() {
                         });
                         return;
 					}
+					var obj = result1[0];
+					if(obj.userName !== userInfo.acc) {
+						res.send({
+                            "responseCode" : '404',
+                            "responseMsg" : 'No user data'
+                        });
+                        return;
+					}
                     if (result1 === undefined || result1.length === 0) {
                         res.send({
                             "responseCode" : '404',
